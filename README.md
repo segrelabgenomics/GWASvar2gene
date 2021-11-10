@@ -64,6 +64,8 @@ Three input files need to be defined on the top of `add_GTEx_variant_ID_to_GWAS_
 We provide table of variants analyzed in GTEx release v8 for eQTLs and sQTLs:
 GTEx = '/data/GTEx_v8_HG38_all_variants.tsv.gz'
 
+It will be available on Zenodo.
+
 2.  Table of variants that GWASvar2gene will annnotate with eQTLs and sQTLs, e.g., variants downloaded from GWAS catalog (https://www.ebi.ac.uk/gwas/docs/file-downloads).
 Required columns in input GWAS variant table: 'CHR_ID', 'CHR_POS', 'STRONGEST SNP-RISK ALLELE' (e.g., rs1925953-T)
 
