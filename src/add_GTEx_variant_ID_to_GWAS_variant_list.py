@@ -4,25 +4,30 @@
 # Segre lab, Massachusetts Eye and Ear, Harvard Medical School
 # Date: 2020
 
+import sys
 import pandas as pd
 
 ## INPUT FILES:
 # List of variants (chr number, position, variant ID (CHR_POS_REF_ALT_BUILD) from QTL database, in this case GTEx v8:
 # Required columns: [1]CHROM     [2]POS  [3]REF  [4]ALT  [5]ID
-GTEx = '../data/GTEx_v8_HG38_all_variants.tsv.gz'
+GTEx = sys.argv[1]
+#GTEx = '../data/GTEx_v8_HG38_all_variants.tsv.gz'
 
 # List of variants that will be annnotated with eQTLs and/or sQTLs, e.g., variants from GWAS catalog
-# Required columns:  CHR_ID, CHR_POS, STRONGEST SNP-RISK ALLELE (e.g., rs1925953-T)
-GWAS = '../example/gwas_catalog_sample_file.tsv'
+# Required columns:  'CHR_ID', 'CHR_POS', 'STRONGEST SNP-RISK ALLELE' (e.g., rs1925953-T)
+GWAS = sys.argv[2]
+#GWAS = '../example/gwas_catalog_sample_file.tsv'
 
 ## OUTPUT FILE
-out_file = '../output/out_GWAS_variant_IDs_added.tsv'
+out_file = sys.argv[3]
+#out_file = '../output/out_GWAS_variant_IDs_added.tsv'
 
 GTEx_df = pd.read_csv(GTEx, sep='\t', compression='gzip')
 GWAS_df = pd.read_csv(GWAS, sep='\t', low_memory=False)
 
 GTEx_df.columns = ['CHR_ID', 'CHR_POS', 'REF', 'ALT', 'GWAS_variant']
-GWAS_df['CHR_ID'] = 'chr'+GWAS_df['CHR_ID'].astype(str)
+# Assuming genome build 38
+GWAS_df["CHR_ID"] = GWAS_df["CHR_ID"].apply(lambda x: "chr"+str(x) if not str(x).startswith("chr") else str(x))
 
 def ALT_splitter(x):
     if '-' in x:

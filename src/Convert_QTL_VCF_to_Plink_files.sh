@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script converts VCF files split by chromosome to Plink files per chromosome.
-# This example is run on the GTEx v8 WGS analysis freeze VCF available via dbGaP.
+# This example is run on the GTEx v8 WGS analysis freeze VCF available via dbGaP (accession no. phs000424.v8)
 
 in_dir='VCF_chrs/'
 for chr in {{1..22},X}

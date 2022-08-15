@@ -1,4 +1,4 @@
-## GWASvar2gene
+# GWASvar2gene
 
 GWASvar2gene is a tool that annotates a set of GWAS variants for complex diseases or trait or any variants of interest, with putative causal genes and regulatory mechanisms, based on eQTLs and sQTLs from GTEx v8 or other molecular QTL studies that are in linkage disequilibrium with each variant.
 
@@ -10,7 +10,7 @@ Contact: ayellet_segre@meei.harvard.edu
 
 `src`: directory contains scripts for the tool 
 
-`data`: directory contains input files required to run GWASvar2gene using cis-eQTLs and cis-sQTLs from GTEx v8 
+`data`: directory contains input files required to run GWASvar2gene using cis-eQTLs and cis-sQTLs from GTEx v8. Input file 'GTEx_v8_HG38_all_variants.tsv.gz' required for running GWASvar2gene can be downloaded from: https://zenodo.org/record/6994426#.Yvq9AOzMJyo
 
 `example`: directory contains sample data and paths to source files for running GWASvar2gene on a sample list of GWAS variants
 
@@ -51,26 +51,30 @@ GWAS variants for complex diseases or traits of interest can be taken from the N
 Minimum required columns: 'CHR_ID', 'CHR_POS', 'STRONGEST SNP-RISK ALLELE'
 
 #### Example shell script to run step 1:  
-`/src/run_add_GTEx_variant_IDs_to_GWAS_variant_list.sh`
+`/src/run_STEP1_add_GTEx_variant_IDs_to_GWAS_variant_list.sh`
 
 Runs: ./add_GTEx_variant_ID_to_GWAS_variant_list.py
 
 ### INPUT FILES:
-Three input files need to be defined on the top of `add_GTEx_variant_ID_to_GWAS_variant_list.py` 
+Three input files need to be defined on the top of `add_GTEx_variant_ID_to_GWAS_variant_list.py`:
+(this script assumes input files are in genome build 38)
 
 1. List of variants tested in QTL database. Required columns: [1]CHROM	[2]POS  [3]REF  [4]ALT  [5]ID
-(i.e., chr number, position, REF allele, ALT allele, variant ID (CHR_POS_REF_ALT_GENOMEBUILD) )
+(i.e., chr number, position, REF allele, ALT allele, variant ID in GTEx format (CHR_POS_REF_ALT_GENOMEBUILD, e.g., chr1_420934_A_G_b38) )
 
 We provide table of variants analyzed in GTEx release v8 for eQTLs and sQTLs:
 GTEx = '/data/GTEx_v8_HG38_all_variants.tsv.gz'
 
-It will be available on Zenodo.
-
 2.  Table of variants that GWASvar2gene will annnotate with eQTLs and sQTLs, e.g., variants downloaded from GWAS catalog (https://www.ebi.ac.uk/gwas/docs/file-downloads).
 Required columns in input GWAS variant table: 'CHR_ID', 'CHR_POS', 'STRONGEST SNP-RISK ALLELE' (e.g., rs1925953-T)
 
+# If you will be using the output from GWASvar2gene for ECLIPSER analysis required columns include also:
+'CHR_ID', 'CHR_POS', 'STRONGEST SNP-RISK ALLELE', "DISEASE/TRAIT", "INITIAL SAMPLE SIZE", "PUBMEDID", "P-VALUE"
+
 Example file:
 GWAS = '/example/gwas_catalog_sample_file.tsv'
+
+Note: GWAS catalog headers are also required for custome built input table of variants. Headers can be found at: https://www.ebi.ac.uk/gwas/docs/file-downloads
 
 3. Output file name:
 out_file = '/output/out_GWAS_variant_IDs_added.tsv'
@@ -80,13 +84,13 @@ The GTEx formatted variant IDs are in column 'GWAS_variant'.
 ### STEP 2. Run GWASvar2gene to map genes to GWAS variants based on eQTLs and sQTLs
 
 #### Example shell script to run step 2:
-`./src/run_GWASVar2Gene.sh`
+`./src/run_STEP2_GWASVar2Gene.sh`
 
 Runs: GWASVar2Gene.py
 
 ### Input arguments:
 
-`--GWAS_variants`: Table with list of GWAS variants to be annotated. Default table is the GWAS catalog table. Minimum required columns: 'CHR_ID', 'CHR_POS', 'STRONGEST SNP-RISK ALLELE'
+`--GWAS_variants`: Table with list of GWAS variants to be annotated. Default table is the GWAS catalog table with variant IDs added from the previous step (e.g., output/out_GWAS_variant_IDs_added.tsv). Minimum required columns: 'CHR_ID', 'CHR_POS', 'STRONGEST SNP-RISK ALLELE', 'GWAS_variant'. 'CHR_ID' refers to chromosome number.
 
 `--primary_plink_directory`: Directory with genotype files of the primary reference panel in Plink format. Best to use genotype study that is most compatible with QTL study. As default we use the GTEx WGS plink files from release v8 that requires dbGaP access (e.g., GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.MAF01.chr*.bed, *.bim, *.fam) or one can use another reference panel that matches the e/sQTL study used.
 
@@ -142,6 +146,6 @@ Adipose_Subcutaneous	Adipose_Subcutaneous.v8.signif_variant_gene_pairs.txt.gz	Ad
 The GWASVar2Gene software package is distributed under the terms of the BSD 3-Clause License. See LICENSE.txt file for more details.
 
 ## Citation
-Rouahana*, Wang* et al., BioRxiv 2021.
+John M. Rouhana*, Jiali Wang*, Gokcen Eraslan, Shankara Anand, Andrew R. Hamel, Brian Cole, Aviv Regev, François Aguet, Kristin G. Ardlie, Ayellet V. Segrè. ECLIPSER: identifying causal cell types and genes for complex traits through single cell enrichment of e/sQTL-mapped genes in GWAS loci. BioRxiv, 2021. *Co-first authors. doi: https://doi.org/10.1101/2021.11.24.
 
-Last updated: November 3, 2021
+Last updated: May 2022

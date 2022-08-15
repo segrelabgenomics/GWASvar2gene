@@ -312,20 +312,31 @@ if not d_skip:
     variants = list(full_GWAS_table.GWAS_variant)
 
     #Set up traits output table
-    traits = full_GWAS_table[['GWAS_variant', 'DISEASE/TRAIT', 'PUBMEDID', 
-                              'SNPS', 'REPORTED GENE(S)', 'MAPPED_GENE', 'UPSTREAM_GENE_ID', 
-                              'DOWNSTREAM_GENE_ID', 'UPSTREAM_GENE_DISTANCE', 'DOWNSTREAM_GENE_DISTANCE',
-                              'STRONGEST SNP-RISK ALLELE', 'CONTEXT', 'INTERGENIC', 'P-VALUE',
-                              'PVALUE_MLOG', 'OR or BETA', 'INITIAL SAMPLE SIZE'
-                             ]].copy()
+    # Minimum required columns of GWAS catalog table for downstream analyses
+    if "GWAS_variant" not in full_GWAS_table.columns:
+        print(f"GWAS_variant not in GWAS table. Please add.")
+        sys.exit(1)
+
+    # From NHGRI/EBI GWAS catalog table:
+    #traits = full_GWAS_table[['GWAS_variant', 'DISEASE/TRAIT', 'PUBMEDID', 
+    #                          'SNPS', 'REPORTED GENE(S)', 'MAPPED_GENE', 'UPSTREAM_GENE_ID', 
+    #                          'DOWNSTREAM_GENE_ID', 'UPSTREAM_GENE_DISTANCE', 'DOWNSTREAM_GENE_DISTANCE',
+    #                          'STRONGEST SNP-RISK ALLELE', 'CONTEXT', 'INTERGENIC', 'P-VALUE',
+    #                          'PVALUE_MLOG', 'OR or BETA', 'INITIAL SAMPLE SIZE'
+    #                         ]].copy()
+    traits = full_GWAS_table.copy()
     traits.drop_duplicates(inplace=True)
     traits.reset_index(drop=True, inplace=True)
 
-    traits.columns = ['GWAS_variant', 'trait', 'pubmed_id', 'rs_id', 'GWAS_reported_genes', 'GWAS_mapped_genes',
-                      'GWAS_variant_upstream_gene_id', 'GWAS_variant_downstream_gene_id', 'GWAS_variant_upstream_gene_distance',
-                      'GWAS_variant_downstream_gene_distance', 'GWAS_strongest_SNP_risk_allele', 'GWAS_variant_context',
-                      'GWAS_variant_intergenic', 'GWAS_p_value', 'GWAS_p_value_mlog', 'GWAS_OR_or_BETA', 'Sample_Ancestries']
+    # Renaming columns in GWAS variant trait table
+    traits = traits.rename(columns={"DISEASE/TRAIT": "trait",
+                                    "INITIAL SAMPLE SIZE": "Sample_Ancestries",
+                                    "PUBMEDID": "pubmed_id"})
 
+    #traits.columns = ['GWAS_variant', 'trait', 'pubmed_id', 'rs_id', 'GWAS_reported_genes', 'GWAS_mapped_genes',
+    #                  'GWAS_variant_upstream_gene_id', 'GWAS_variant_downstream_gene_id', 'GWAS_variant_upstream_gene_distance',
+    #                  'GWAS_variant_downstream_gene_distance', 'GWAS_strongest_SNP_risk_allele', 'GWAS_variant_context',
+    #                  'GWAS_variant_intergenic', 'GWAS_p_value', 'GWAS_p_value_mlog', 'GWAS_OR_or_BETA', 'Sample_Ancestries']
 
     #Determine if we're going to be using a second study
     second_study = False
@@ -446,7 +457,6 @@ if not d_skip:
     print("Done cleaning up.")
 
     #cleanup
-
 
 
     #Turn into one df
@@ -733,6 +743,3 @@ sQTL_table.to_csv(output_dir+output_prefix+'_sQTL_table.tsv', sep='\t', index=Fa
 print('3')
 sQTL_tissue_table.to_csv(output_dir+output_prefix+'_sQTL_tissue_table.tsv', sep='\t', index=False, single_file=True)
 print("Done.")
-
-
-
