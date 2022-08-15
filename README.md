@@ -1,6 +1,6 @@
 # GWASvar2gene
 
-GWASvar2gene is a tool that annotates a set of GWAS variants for complex diseases or trait or any variants of interest, with putative causal genes and regulatory mechanisms, based on eQTLs and sQTLs from GTEx v8 or other molecular QTL studies that are in linkage disequilibrium with each variant.
+GWASvar2gene is a tool that annotates a set of GWAS variants associated with complex diseases or traits or any set of variants of interest, with putative causal regulatory mechanisms and genes, based on linkage disequilibrium of each variant with expression and splicing quantitative trait loci (eQTLs and sQTLs) from GTEx v8 or other molecular QTL studies.
 
 **Author:** John Rouhana, written in the Segre lab under the guidance of Ayellet Segre, Massachusetts Eye and Ear, Harvard Medical School, Boston, MA
 
